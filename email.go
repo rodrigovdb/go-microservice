@@ -23,7 +23,6 @@ func (e Email) msg() string {
 		"To:" + e.to + "\n" +
 		"Subject" + e.subject + "\n" +
 		e.body
-
 }
 
 func (e Email) send() error {
@@ -33,7 +32,9 @@ func (e Email) send() error {
 		return err
 	}
 
-	err = smtp.SendMail(credentials.hostname+":"+credentials.port,
+	hostport := credentials.hostname + ":" + credentials.port
+
+	err = smtp.SendMail(hostport,
 		smtp.PlainAuth("", credentials.username, credentials.password, credentials.hostname),
 		e.from, []string{e.to}, []byte(e.body))
 
