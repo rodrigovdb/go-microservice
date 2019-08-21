@@ -5,6 +5,13 @@
 
 package main
 
+import (
+	"net/http"
+)
+
 func main() {
-	serve()
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handler) // @see handler.go in order to discover handler function
+
+	http.ListenAndServe(":8080", mux)
 }
