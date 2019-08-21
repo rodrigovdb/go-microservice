@@ -7,11 +7,6 @@ import (
 	"net/smtp"
 )
 
-const email_hostname = "smtp.gmail.com"
-const email_username = ""
-const email_password = ""
-const email_port = ""
-
 type Email struct {
 	to      string
 	from    string
@@ -32,8 +27,14 @@ func (e Email) msg() string {
 }
 
 func (e Email) send() error {
-	err := smtp.SendMail(email_hostname+":"+email_port,
-		smtp.PlainAuth("", email_username, email_password, email_hostname),
+	credentials, err := readCredentials()
+
+	if err != nil {
+		return err
+	}
+
+	err = smtp.SendMail(credentials.hostname+":"+credentials.port,
+		smtp.PlainAuth("", credentials.username, credentials.password, credentials.hostname),
 		e.from, []string{e.to}, []byte(e.body))
 
 	return err
